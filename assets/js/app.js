@@ -33,7 +33,7 @@ require('../scss/app.scss');
         const $item = $(item);
         $.ajax({
           url: $item.data('link'),
-          method: 'delete'
+          method: 'get'
         }).then((res) => {
           $item.parents('tr').remove();
         })
@@ -48,7 +48,7 @@ require('../scss/app.scss');
         if (!curTr.hasClass('read')) {
           $.ajax({
             url: $item.parents('tr').data('markread'),
-            method: 'put'
+            method: 'get'
           }).then((res) => {
             $item.parents('tr').addClass('read');
           })
@@ -69,7 +69,7 @@ require('../scss/app.scss');
         to = setTimeout(() => {
           $.ajax({
             url: tr.data('markread'),
-            method: 'put'
+            method: 'get'
           }).then((res) => {
             tr.addClass('read');
           });
@@ -92,7 +92,7 @@ require('../scss/app.scss');
       if (text.replace(/\s/g,'').length > 0) {
         $('#text-content').html('<div class="email-text-content"><p>'+text.replace(/\n/gi, "<br>\n")+'</p></div>');
       } else {
-        $('#text-content').html('<div class="no-content"><p>Aucun contenu texte pour cet email</p></div>');
+        $('#text-content').html('<div class="no-content"><p>No text content for this email</p></div>');
       }
       $('#raw-content').html('<div class="email-text-content"><p>'+tr.find('script.raw-email').html().replace(/\n/gi, "<br>\n")+'</p></div>');
 

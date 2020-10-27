@@ -29,47 +29,59 @@ class EmailController extends AbstractController
 {
     /**
      * @param int $id
-     * @Route("/emails/{id}", name="deleteEmail", methods={"DELETE"})
+     * @Route("/emails/delete/{id}", name="deleteEmail", methods={"GET"})
      * @return Response
      */
     public function delete($id)
     {
         $repository = $this->getDoctrine()->getRepository(Email::class);
         $em = $this->getDoctrine()->getManager();
-        $email = $repository->find((int)$id);
-        /**
-         * @var Email $email
-         */
-        $email->setDeletedAt(new \DateTime());
-        $em->persist($email);
-        $em->flush();
+        if($email = $repository->find((int)$id)) {
+            /**
+             * @var Email $email
+             */
+            $email->setDeletedAt(new \DateTime());
+            $em->persist($email);
+            $em->flush();
+
+            return new JsonResponse([
+                'status' => 'ok',
+                'message' => 'email deleted',
+            ], 200);
+        }
 
         return new JsonResponse([
-            'status' => 'ok',
-            'message' => 'email deleted',
-        ], 200);
+            'status' => 'fail',
+            'message' => 'email not found',
+        ], 400);
     }
     /**
      * @param int $id
-     * @Route("/emails/markRead/{id}", name="markRead", methods={"PUT"})
+     * @Route("/emails/markRead/{id}", name="markRead", methods={"GET"})
      * @return Response
      */
     public function markRead($id)
     {
         $repository = $this->getDoctrine()->getRepository(Email::class);
         $em = $this->getDoctrine()->getManager();
-        $email = $repository->find((int)$id);
-        /**
-         * @var Email $email
-         */
-        $email->setReadAt(new \DateTime());
-        $em->persist($email);
-        $em->flush();
+        if($email = $repository->find((int)$id)) {
+            /**
+             * @var Email $email
+             */
+            $email->setReadAt(new \DateTime());
+            $em->persist($email);
+            $em->flush();
+
+            return new JsonResponse([
+                'status' => 'ok',
+                'message' => 'email marked as read',
+            ], 200);
+        }
 
         return new JsonResponse([
-            'status' => 'ok',
-            'message' => 'email marked as read',
-        ], 200);
+            'status' => 'fail',
+            'message' => 'email not found',
+        ], 400);
     }
 
     /**
@@ -79,6 +91,10 @@ class EmailController extends AbstractController
      */
     public function newEmails($last)
     {
+        // Make sure $last is an int
+        $last = preg_replace('/\D/', '', $last);
+        $last = (int) ($last ?? 0);
+
         /**
          * @var EmailRepository $repository
          */

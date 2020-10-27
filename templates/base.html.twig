@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{{ asset('builds/app.css') }}">
 {% endblock %}
 {% block footer %}
+    {% if not hide_footer %}
     <footer class="main-footer">
         <!-- To the right -->
         <div class="pull-right hidden-xs">
@@ -13,6 +14,7 @@
         <!-- Default to the left -->
         Copyright &copy; 2019 <strong><a href="https://jfoucher.com">Jonathan Foucher</a>.</strong> All rights reserved.
     </footer>
+    {%  endif %}
 {% endblock %}
 {% block javascripts %}
     <script src="{{ asset('builds/app.js') }}"></script>
